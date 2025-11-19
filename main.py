@@ -7,20 +7,27 @@ app = Flask(__name__)
 
 # Подключение к БД
 def get_db_connection():
-    DATABASE_URL = os.environ.get('postgresql://serverless_db_igol_user:vYgJh42cbpdmxZT1nlv13NlNdXX6Qe4k@dpg-d4evr01r0fns73c0gs6g-a/serverless_db_igol')
-    if DATABASE_URL:
-        # Исправляем формат URL для совместимости
-        if DATABASE_URL.startswith('postgres://'):
-            DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    # Получаем строку подключения из переменной окружения DATABASE_URL
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if not DATABASE_URL:
+        print("DATABASE_URL environment variable not set")
+        return None
 
-        try:
-            # psycopg v3 использует строку подключения напрямую
-            conn = psycopg.connect(DATABASE_URL)
-            return conn
-        except Exception as e:
-            print(f"Database connection error: {e}")
-            return None
-    return None
+    # Логируем строку подключения без пароля (для безопасности)
+    parsed_url = urlparse(DATABASE_URL)
+    safe_url = f"{parsed_url.scheme}://{parsed_url.hostname}:{parsed_url.port}{parsed_url.path}?{parsed_url.query}"
+    print(f"Connecting to database: {safe_url}")
+
+    # Исправляем формат URL для совместимости (если требуется)
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+    try:
+        conn = psycopg.connect(DATABASE_URL)
+        return conn
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        return None
 
 
 # Создание таблицы при старте
