@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Подключение к БД
 def get_db_connection():
-    DATABASE_URL = os.environ.get('postgresql://serverless_db_pqgr_user:WzdbVJZ5q554gjFm7rnJZyHFUtiSQODB@dpg-d4ev03rgk3sc73c078vg-a/serverless_db_pqgr')
+    DATABASE_URL = os.environ.get('postgresql://serverless_db_igol_user:vYgJh42cbpdmxZT1nlv13NlNdXX6Qe4k@dpg-d4evr01r0fns73c0gs6g-a/serverless_db_igol')
     if DATABASE_URL:
         # Исправляем формат URL для совместимости
         if DATABASE_URL.startswith('postgres://'):
